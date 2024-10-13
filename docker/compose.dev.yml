@@ -12,6 +12,8 @@ services:
     tty: true
     stdin_open: true
     entrypoint: /bin/bash  # 使用/bin/bash调试
+    volumes:
+      - ./musicatri/logs:/musicatri/logs
     environment:
       - NETEASECLOUDMUSICAPI_URL=${NETEASECLOUDMUSICAPI_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -41,3 +43,5 @@ services:
   mongodb:
     hostname: mongodb
     image: mongodb/mongodb-community-server:${MONGODB_TAG}
+    volumes:
+      - ./mongodb/data:/data/db  # 数据持久化

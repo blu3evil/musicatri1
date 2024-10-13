@@ -8,6 +8,8 @@ services:
       - "5000:5000"
     tty: true
     stdin_open: true
+    volumes:
+      - ./musicatri/logs:/musicatri/logs
     environment:
       - NETEASECLOUDMUSICAPI_URL=${NETEASECLOUDMUSICAPI_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -37,3 +39,5 @@ services:
   mongodb:
     hostname: mongodb
     image: registry.cn-hangzhou.aliyuncs.com/pineclone/mongodb-community-server:${MONGODB_TAG}
+    volumes:
+      - ./mongodb/data:/data/db  # 数据持久化
