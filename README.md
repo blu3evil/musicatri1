@@ -65,7 +65,8 @@ PORT=4000 npx NeteaseCloudMusicApi@latest
 server running @ http://localhost:3000  # 项目运行回显
 ```
 
-通过 http://localhost:3000 访问NeteaseCloudMusicApi项目，可以点击主页链接参看开发文档![image-20241013120351539](./README.assets/image-20241013120351539.png)
+通过 http://localhost:3000 访问NeteaseCloudMusicApi项目，可以点击主页链接参看开发文档![image](https://github.com/user-attachments/assets/bf1695d1-06c3-4f88-9c1f-e59547015a47)
+
 
 #### 2.MongoDB
 
