@@ -1,8 +1,9 @@
-# Musicatri
+# Musicatri-Clash-Proxy
 
 - 原项目github仓库地址：https://musicatri.github.io/
 
 Discord开源音乐机器人，此仓库该项目为二次开发版本
+**此分支为Musicatri原始项目代理增强版本，添加Clash容器作为代理节点以支持在云服务器上部署**
 
 ## 1.项目简介
 
@@ -17,7 +18,7 @@ Discord开源音乐机器人，此仓库该项目为二次开发版本
 ```bash
 musicatri1  # 项目根目录
 ├── config.json  # 项目运行参数配置文件
-├── docker  # docker相关文件目录, 详情参考[项目部署]-[docker部署]
+├── docker-compose  # docker相关文件目录, 详情参考[项目部署]-[docker部署]
 ├── langfiles  # 本地化目录
 ├── musicatri.py  # 项目程序启动python文件
 └── website  # 项目前端页面文件
@@ -180,16 +181,16 @@ python musicatri.py
 
 ```bash
 # 从dockerhub拉取
-docker pull pineclone/musicatri:latest
+docker-compose pull pineclone/musicatri:latest
 
 # 从阿里云镜像仓库拉取
-docker pull registry.cn-hangzhou.aliyuncs.com/pineclone/musicatri:latest
+docker-compose pull registry.cn-hangzhou.aliyuncs.com/pineclone/musicatri:latest
 ```
 
 通过命令来运行容器：
 
 ```bash
-docker run --name musicatri -p 5000:5000 -it \
+docker-compose run --name musicatri -p 5000:5000 -it \
   -e NETEASECLOUDMUSICAPI_URL="http://localhost:3000" \
   -e NETEASECLOUDMUSICAPI_URL="http://localhost:3000" \
   -e MONGODB_URL="mongodb://localhost:27017" \
@@ -229,7 +230,7 @@ vim .env
 ```
 
 ```bash
-docker run --name musicatri -p 5000:5000 -it --rm --env-file ./.env pineclone/musicatri:1.0.0-alpha
+docker-compose run --name musicatri -p 5000:5000 -it --rm --env-file ./.env pineclone/musicatri:1.0.0-alpha
 ```
 
 更推荐使用docker compose来部署，在compose.yml中编写服务的配置信息：
@@ -268,7 +269,7 @@ services:
 ```
 
 ```bash
-docker compose up -d  # 启动容器
+docker-compose compose up -d  # 启动容器
 ```
 
 #### 2. 全栈部署
@@ -292,7 +293,7 @@ curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docke
 vim .env
 
 # 启动musicatri
-docker compose up -d
+docker-compose compose up -d
 ```
 
 查看你的discord服务器就可以看到机器人上线了~
