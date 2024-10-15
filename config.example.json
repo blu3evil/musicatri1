@@ -9,11 +9,11 @@
   "LOG_BASIC_FORMAT": "%(asctime)s:%(levelname)s:%(message)s",
   "LOG_DATE_FORMAT": "%Y-%m-%d %H:%M:%S",
   "DISCORD_REDIRECT_URI": "http://localhost:5000/account/callback",
-  "DISCORD_CLIENT_ID": "1293726991756955720",
-  "DISCORD_CLIENT_SECRET": "IDeQhtgajr-upBV6ADoGDka7xdTCOO1w",
-  "DISCORD_BOT_TOKEN": "MTI5MzcyNjk5MTc1Njk1NTcyMA.G34KRN.mp_oa_-xYphj7noEBc0ZW-GBSn84Xi_jGT0S6c",
+  "DISCORD_CLIENT_ID": "",
+  "DISCORD_CLIENT_SECRET": "",
+  "DISCORD_BOT_TOKEN": "",
   "DISCORD_BOT_BANNER": "",
   "DISCORD_BOT_ACTIVITY": 2,
-  "DISCORD_BOT_COMMAND_PREFIX": "pinecatri",
+  "DISCORD_BOT_COMMAND_PREFIX": "musicatri",
   "YOUTUBEDL_PROXY": ""
 }

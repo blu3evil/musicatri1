@@ -1,21 +1,20 @@
-# 开发环境compose文件，执行build命令构建pineclone/musicatri镜像
+# 生产环境compose文件，使用阿里云镜像托管服务，在国内环境可以使用这份compose
 version: "3.8"
 name: musicatri
 services:
   musicatri:  # musicatri音乐机器人
-#    image: pineclone/musicatri:dev
-    build:
-      context: ../
-      dockerfile: Dockerfile.fastbuild
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/musicatri:${MUSICATRI_TAG}
+#    build:
+#      context: ../
+#      dockerfile: Dockerfile.basic.service.clash.enhance.clash.enhance.fastbuild
     hostname: musicatri
     ports:
       - "5000:5000"
     tty: true
     stdin_open: true
-    entrypoint: /bin/bash  # 使用/bin/bash调试
+#    entrypoint: /bin/bash  # 使用/bin/bash调试
     volumes:
-      - ./musicatri/logs:/musicatri/logs  # musicatri日志文件
-      - ./musicatri/songcache:/musicatri/songcache  #
+      - ./musicatri/logs:/musicatri/logs
     environment:
       - NETEASECLOUDMUSICAPI_URL=${NETEASECLOUDMUSICAPI_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -39,12 +38,10 @@ services:
         condition: service_healthy
       mongodb:  # mongodb
         condition: service_healthy
-      clash:  # clash
-        condition: service_healthy
 
   neteasecloudmusicapi:  # 网易云音乐api
     hostname: neteasecloudmusicapi
-    image: binaryify/netease_cloud_music_api:${NETEASECLOUDMUSICAPI_TAG}
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/netease_cloud_music_api:${NETEASECLOUDMUSICAPI_TAG}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "nc", "-zv", "localhost", "3000"]
@@ -54,7 +51,7 @@ services:
 
   mongodb:  # 音乐机器人数据库
     hostname: mongodb
-    image: mongodb/mongodb-community-server:${MONGODB_TAG}
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/mongodb-community-server:${MONGODB_TAG}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "sh", "-c", "mongosh --eval 'db.runCommand( {hello:1} )'"]
@@ -66,20 +63,5 @@ services:
       # mongodb日志文件: /data/db/.mongodb/mongosh/*.log
       - mongodb-data:/data/db
 
-  clash:  # 代理节点
-    image: laoyutang/clash-and-dashboard:${CLASH_TAG}
-    hostname: clash
-    restart: unless-stopped
-    volumes:
-      - ./config.yaml:/root/.config/clash/config.yaml  # clash配置文件
-    healthcheck:
-      test: ["CMD", "nc", "-zv", "localhost", "7890"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    ports:
-      - "7888:8080"  # 请不要在生产环境暴露clash控制面板端口
-
 volumes:
   mongodb-data:  # mongodb数据库存储数据持久化
-

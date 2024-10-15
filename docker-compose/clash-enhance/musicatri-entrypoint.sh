@@ -95,7 +95,7 @@ appendIfAbsent(){
 # 初始化配置
 appendIfAbsent "7890" "socks5 $clash_ip 7890" "/etc/proxychains4.conf"
 appendIfAbsent $MONGODB_HOSTNAME "$mongodb_ip  $MONGODB_HOSTNAME" "/etc/hosts"
-appendIfAbsent $CLASH_HOSTNAME "$neteasecloudmusicapi_ip  $NETEASECLOUDMUSICAPI_HOSTNAME" "/etc/hosts"
+appendIfAbsent $NETEASECLOUDMUSICAPI_HOSTNAME "$neteasecloudmusicapi_ip  $NETEASECLOUDMUSICAPI_HOSTNAME" "/etc/hosts"
 
 # 启动项目
 proxychains4 python musicatri.py

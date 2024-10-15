@@ -1,20 +1,21 @@
-# 生产环境compose文件，使用阿里云镜像托管服务，在国内环境可以使用这份compose
+# 开发环境compose文件，执行build命令构建pineclone/musicatri镜像
 version: "3.8"
 name: musicatri
 services:
   musicatri:  # musicatri音乐机器人
-    image: pineclone/musicatri:${MUSICATRI_TAG}
-#    build:
-#      context: ../
-#      dockerfile: Dockerfile.fastbuild
+#    image: pineclone/musicatri:dev
+    build:
+      context: ../../
+      dockerfile: Dockerfile.basic.service.fastbuild
     hostname: musicatri
     ports:
       - "5000:5000"
     tty: true
     stdin_open: true
-#    entrypoint: /bin/bash  # 使用/bin/bash调试
+    entrypoint: /bin/bash  # 使用/bin/bash调试
     volumes:
-      - ./musicatri/logs:/musicatri/logs
+      - ./musicatri/logs:/musicatri/logs  # musicatri日志文件
+      - ./musicatri/songcache:/musicatri/songcache  #
     environment:
       - NETEASECLOUDMUSICAPI_URL=${NETEASECLOUDMUSICAPI_URL}
       - MONGODB_URL=${MONGODB_URL}
@@ -38,8 +39,6 @@ services:
         condition: service_healthy
       mongodb:  # mongodb
         condition: service_healthy
-      clash:  # clash
-        condition: service_healthy
 
   neteasecloudmusicapi:  # 网易云音乐api
     hostname: neteasecloudmusicapi
@@ -60,26 +59,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    # mongodb容器使用docker volume挂载
-    volumes:
-      # mongodb日志文件: /data/db/.mongodb/mongosh/*.log
-      - mongodb-data:/data/db
-
-  clash:  # 代理节点
-    image: laoyutang/clash-and-dashboard:${CLASH_TAG}
-    hostname: clash
-    restart: unless-stopped
-    volumes:
-      - ./config.yaml:/root/.config/clash/config.yaml  # clash配置文件
-    healthcheck:
-      test: ["CMD", "nc", "-zv", "localhost", "7890"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-#    ports:
-#      - "7888:8080"  # 请不要在生产环境暴露clash控制面板端口
+#    开发环境下Mongodb不需要挂载数据卷
+#    volumes:
+#       mongodb日志文件: /data/db/.mongodb/mongosh/*.log
+#      - mongodb-data:/data/db
 
 volumes:
   mongodb-data:  # mongodb数据库存储数据持久化
-
 

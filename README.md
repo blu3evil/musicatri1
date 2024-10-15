@@ -236,7 +236,7 @@ docker-compose run --name musicatri -p 5000:5000 -it --rm --env-file ./.env pine
 更推荐使用docker compose来部署，在compose.yml中编写服务的配置信息：
 
 ```bash
-echo "" > compose.yml && vim compose.yml  # 新建配置文件
+echo "" > compose.dev.env.yml && vim compose.dev.env.yml  # 新建配置文件
 ```
 
 ```yaml
@@ -281,10 +281,10 @@ docker-compose compose up -d  # 启动容器
 mkdir musicatri && cd musicatri
 
 # 拉取compose启动文件
-curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docker/compose.prod.yml > compose.yml
+curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docker/compose.prod.yml > compose.dev.env.yml
 
 # 如果在国内环境可以使用阿里云的仓库
-curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docker/compose.prod.aliyun.yml > compose.yml
+curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docker/compose.prod.aliyun.yml > compose.dev.env.yml
 
 # 拉取配置文件
 curl https://raw.githubusercontent.com/blu3evil/musicatri1/refs/heads/main/docker/env.example > .env

@@ -1,0 +1,83 @@
+# 生产环境compose文件，使用阿里云镜像托管服务，在国内环境可以使用这份compose
+version: "3.8"
+name: musicatri
+services:
+  musicatri:  # musicatri音乐机器人
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/musicatri:${MUSICATRI_TAG}
+#    build:
+#      context: ../
+#      dockerfile: Dockerfile.basic.service.clash.enhance.clash.enhance.fastbuild
+    hostname: musicatri
+    ports:
+      - "5000:5000"
+    tty: true
+    stdin_open: true
+#    entrypoint: /bin/bash  # 使用/bin/bash调试
+    volumes:
+      - ./musicatri/logs:/musicatri/logs
+    environment:
+      - NETEASECLOUDMUSICAPI_URL=${NETEASECLOUDMUSICAPI_URL}
+      - MONGODB_URL=${MONGODB_URL}
+      - SERVER_PORT=${SERVER_PORT}
+      - PUBLIC_URL=${PUBLIC_URL}
+      - APP_SECRET_KEY=${APP_SECRET_KEY}
+      - DISCORD_REDIRECT_URI=${DISCORD_REDIRECT_URI}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_BOT_BANNER=${DISCORD_BOT_BANNER}
+      - DISCORD_BOT_ACTIVITY=${DISCORD_BOT_ACTIVITY}
+      - DISCORD_BOT_COMMAND_PREFIX=${DISCORD_BOT_COMMAND_PREFIX}
+      - YOUTUBEDL_PROXY=${YOUTUBEDL_PROXY}
+      - CONSOLE_LOG_LEVEL=${CONSOLE_LOG_LEVEL}
+      - LOGFILE_LOG_LEVEL=${LOGFILE_LOG_LEVEL}
+      - LOG_BASIC_FORMAT=${LOG_BASIC_FORMAT}
+      - LOG_DATE_FORMAT=${LOG_DATE_FORMAT}
+    depends_on:
+      neteasecloudmusicapi:  # neteasecloudmusicapi
+        condition: service_healthy
+      mongodb:  # mongodb
+        condition: service_healthy
+      clash:  # clash
+        condition: service_healthy
+
+  neteasecloudmusicapi:  # 网易云音乐api
+    hostname: neteasecloudmusicapi
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/netease_cloud_music_api:${NETEASECLOUDMUSICAPI_TAG}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  mongodb:  # 音乐机器人数据库
+    hostname: mongodb
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/mongodb-community-server:${MONGODB_TAG}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mongosh --eval 'db.runCommand( {hello:1} )'"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    # mongodb容器使用docker volume挂载
+    volumes:
+      # mongodb日志文件: /data/db/.mongodb/mongosh/*.log
+      - mongodb-data:/data/db
+
+  clash:  # 代理节点
+    image: registry.cn-hangzhou.aliyuncs.com/pineclone/clash-and-dashboard:${CLASH_TAG}
+    hostname: clash
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/root/.config/clash/config.yaml  # clash配置文件
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "7890"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+#    ports:
+#      - "7888:8080"  # 请不要在生产环境暴露clash控制面板端口
+
+volumes:
+  mongodb-data:  # mongodb数据库存储数据持久化
