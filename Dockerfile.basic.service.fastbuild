@@ -1,0 +1,17 @@
+# 默认镜像构建基于基于python-3.11.10，使用Dockerfile.fastbuild作为构建文件来获得更快的构建速度
+#FROM python:3.11.10-slim
+FROM pineclone/musicatri:dev-base-v1.0.0
+
+# 工作目录设置为/musicatri
+WORKDIR /musicatri
+
+# 复制项目运行文件
+COPY langfiles /musicatri/langfiles
+COPY website /musicatri/website
+COPY musicatri.py /musicatri/musicatri.py
+COPY config.json /musicatri/config.json
+# 启动入口点文件
+COPY docker-compose/basic-service/musicatri-entrypoint.sh /musicatri/entrypoint.sh
+
+# 项目启动入口
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]

@@ -42,8 +42,8 @@ from flask_cors import CORS
 import logging
 
 # windows平台下换成默认的gbk
-if platform.system() == "Windows":
-    cmd("chcp 936")
+# if platform.system() == "Windows":
+#     cmd("chcp 936")
 
 # 初始化项目目录
 config_path = "./config.json"  # 配置文件
@@ -96,8 +96,6 @@ DISCORD_BOT_ACTIVITY = None  # discord机器人状态
 
 # youtube-dl配置项
 YOUTUBEDL_PROXY = None  # youtube-dl代理地址
-
-
 
 # 日志等级
 # CRITICAL = 50
@@ -162,8 +160,9 @@ with (codecs.open(dirpath + "config.json", encoding='utf-8', mode='r') as config
     if not APP_SECRET_KEY or APP_SECRET_KEY == '':
         raise Exception("无效的配置APP_SECRET_KEY")
     #  配置日志等级
+    import sys
     formatter = logging.Formatter(LOG_BASIC_FORMAT, LOG_DATE_FORMAT)
-    console_handler = logging.StreamHandler()  # 输出到控制台的handler
+    console_handler = logging.StreamHandler(sys.stdout)  # 输出到控制台的handler，使用utf-8字符集
     console_handler.setFormatter(formatter)
     console_handler.setLevel(CONSOLE_LOG_LEVEL)
 
@@ -179,7 +178,7 @@ with (codecs.open(dirpath + "config.json", encoding='utf-8', mode='r') as config
             break
         logfile_index += 1  # 若配置文件已经存在那么继续添加索引号
 
-    logfile_handler = logging.FileHandler(logfile_path)  # 输出到文件的handler
+    logfile_handler = logging.FileHandler(logfile_path, encoding="utf-8")  # 输出到文件的handler
     logfile_handler.setFormatter(formatter)
     logfile_handler.setLevel(LOGFILE_LOG_LEVEL)
 
@@ -1164,7 +1163,7 @@ class chatgpt():
 
 @musicatri.event
 async def on_ready():
-    logger.info("主人我上线啦(｡･ω･｡)ﾉ♡")
+    logger.info("主人我上线啦(｡•̀ᴗ-)✧")
     logger.info("主人我目前加入了" + str(len(musicatri.guilds)) + "个服务器哦")
     writeplays.start()
     connecttovoice.start()

@@ -5,11 +5,13 @@ FROM python:3.11.10-slim
 WORKDIR /musicatri
 
 # 复制项目运行文件
-COPY ../langfiles /musicatri/langfiles
-COPY ../website /musicatri/website
-COPY ../musicatri.py /musicatri/musicatri.py
-COPY ../config.json /musicatri/config.json
-COPY ../requirements.txt /musicatri/requirements.txt
+COPY langfiles /musicatri/langfiles
+COPY website /musicatri/website
+COPY musicatri.py /musicatri/musicatri.py
+COPY config.json /musicatri/config.json
+COPY requirements.txt /musicatri/requirements.txt
+# 启动入口点文件
+COPY docker-compose/basic-service/musicatri-entrypoint.sh /musicatri/entrypoint.sh
 
 # 安装python第三方依赖
 RUN ["pip", "install", "--upgrade", "pip"]
@@ -20,4 +22,4 @@ RUN ["apt", "update"]
 RUN ["apt", "install", "ffmpeg", "-y"]
 
 # 项目启动入口
-ENTRYPOINT ["python", "./musicatri.py"]
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]

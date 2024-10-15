@@ -1,0 +1,18 @@
+# 使用开发镜像以加快构建速度
+FROM pineclone/musicatri:dev-base-v1.0.0-fat
+
+# 设置工作目录到/musicatri
+WORKDIR /musicatri
+
+# 复制项目运行文件
+COPY langfiles /musicatri/langfiles
+COPY website /musicatri/website
+COPY musicatri.py /musicatri/musicatri.py
+COPY config.json /musicatri/config.json
+# 启动入口点文件
+COPY docker-compose/clash-enhance/musicatri-entrypoint.sh /musicatri/entrypoint.sh
+# 覆盖原始proxychains配置文件
+COPY docker-compose/clash-enhance/proxychains4.conf /etc/proxychains4.conf
+
+# 项目启动入口
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]

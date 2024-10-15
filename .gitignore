@@ -112,7 +112,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-docker/.env
+docker-compose/clash-enhance/.env
 .venv
 env/
 venv/
@@ -213,6 +213,19 @@ setup.bat
 setup.py
 setup.sh
 run.sh
-logs
-docker/config.yaml
-docker/mongodb/
+
+# compose for clash enhance
+docker-compose/clash-enhance/config.yaml
+docker-compose/clash-enhance/mongodb/
+docker-compose/clash-enhance/musicatri/
+
+# compose for basic service
+docker-compose/basic-service/config.yaml
+docker-compose/basic-service/mongodb/
+docker-compose/basic-service/musicatri/
+
+# 项目文档页面
+gh-pages
+
+# 项目pull request md记录目录
+pull-requests/
