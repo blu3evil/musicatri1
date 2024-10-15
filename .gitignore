@@ -226,3 +226,6 @@ docker-compose/basic-service/musicatri/
 
 # 项目文档页面
 gh-pages
+
+# 项目pull request md记录目录
+pull-requests/
