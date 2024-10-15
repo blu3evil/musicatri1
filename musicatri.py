@@ -42,8 +42,8 @@ from flask_cors import CORS
 import logging
 
 # windows平台下换成默认的gbk
-if platform.system() == "Windows":
-    cmd("chcp 936")
+# if platform.system() == "Windows":
+#     cmd("chcp 936")
 
 # 初始化项目目录
 config_path = "./config.json"  # 配置文件
@@ -368,7 +368,7 @@ scm={}
 songduration={}
 cstarttime={}
 pausetime={}
-
+global_source = None #视频类缓存文件的地址
 
 @app.route('/login/status', methods=['GET'])
 def check_login_status():
@@ -651,6 +651,38 @@ def getcurrentsong():
         return json.dumps(a)
     except:
         return json.dumps({})
+
+@app.route('/seek', methods=['POST'])
+async def seek():
+    global global_source
+    time = int(request.json['time'])  # 从 POST 请求中获取跳转时间
+    guildid = int(request.json["guildid"])
+    if discord_auth.authorized:
+        if checkuser(guildid, discord_auth.fetch_user().id):
+                players[guildid] = discord.utils.get(musicatri.voice_clients, guild=musicatri.get_guild(guildid))
+                if players[guildid]:
+                    try:
+                        # players[guildid].stop()
+                        if players[guildid] and players[guildid].is_connected():
+                            # 停止当前音频并跳转到新的时间点
+                            players[guildid].stop()
+                            # bv_id = a.split('/')[-1]
+                            # file = f"ytdltemp/{bv_id}.m4a"
+                            # file = await getyt(a)[1]._id
+                            file = global_source
+                            audio_source = discord.FFmpegPCMAudio(file, before_options=f'-ss {time}')
+                            players[guildid].play(audio_source)
+                            # await getcurrentsong()
+                            return 'ok'
+                    except:
+                        players[guildid].resume()
+                else:
+                    return "no"      
+        else:
+            return "unconnected"
+    else:
+        return "请先登录喵~"
+    
 @app.route('/getcurrentqueue', methods = ['GET'])
 def getcurrentqueue():
     args = request.args.to_dict()
@@ -898,8 +930,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
             return lista
 
         else:
-
             source = ytdl.prepare_filename(data)
+            global global_source
+            global_source = source
             if site=="bili":
                 data["url"] = "https://www.bilibili.com/video/" + data["webpage_url_basename"]
             elif site=="nico":

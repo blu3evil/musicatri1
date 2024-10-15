@@ -252,6 +252,7 @@ body.dark-mode button.delete-button:hover {
 <div class="slidecontainer">
   <input type="range" min="1" max="100" value="50" class="slider" style="width:70%" id="songtimeslider">
 </div>
+<p>进度条: <span id="selectedTime">50</span>s</p>
 <br>
 <button type="button" id="stop" onclick="
 if (!logedin){alert('请先登录 please login first'); };fetch(url+'/changesongstate', {
@@ -582,6 +583,39 @@ function arraysAreEqual(array1, array2) {
 }
 
 
+const slider = document.getElementById("songtimeslider");
+const selectedTimeDisplay = document.getElementById("selectedTime");
+// 当拖动条变化时，实时更新显示的值
+slider.oninput = function() {
+    selectedTimeDisplay.innerHTML = this.value;
+}
+
+// 当松开拖动条时，发送跳转请求
+slider.onchange = function() {
+    var seekTime = this.value;
+    
+    // 发送 POST 请求到后端
+    fetch('/seek', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'guildid':guildid,'time':seekTime})
+        // body: 'time=' + seekTime
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Seek time sent successfully: " + seekTime + "s");
+        } else {
+            console.error("Failed to send seek time.");
+        }
+    })
+    .catch(error => {
+        console.error("Error occurred:", error);
+    });
+}
+
 function getCurrentSong() {
   fetch(url+"/getcurrentsong?id="+guildid)
     .then(response => response.json())
@@ -590,6 +624,7 @@ function getCurrentSong() {
       if (responsejson.playing == true){
       document.getElementById("songtimeslider").max = responsejson.duration;
       document.getElementById("songtimeslider").value = (Date.now()-responsejson.starttime)/1000;
+      selectedTimeDisplay.innerHTML = (Date.now()-responsejson.starttime)/1000;
       if (!responsejson.thumbnail){
         document.getElementById("thumbnail").hidden = true;
       }else{
