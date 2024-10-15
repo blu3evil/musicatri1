@@ -1,0 +1,70 @@
+{
+    "title": "Musicatri文档",
+    "author" : "pineclone",
+    "description" : "Musicatri开发部署手册",
+    "language" : "zh-hans",
+    "structure": {
+        "readme": "README.md"
+    },
+    "plugins": [
+        "-lunr",
+        "-search",
+        "search-pro",
+        "back-to-top-button",
+	    "chapter-fold",
+	    "expandable-chapters-small",
+	    "splitter",
+	    "github",
+	    "edit-link",
+        "favicon",
+        "code",
+        "prism",
+        "-highlight",
+        "ancre-navigation",
+        "tbfed-pagefooter",
+        "advanced-emoji",
+        "hide-element"
+    ],
+    "pluginsConfig": {
+
+        "hide-element": {
+            "elements": [".gitbook-link"]
+        },
+
+        "prism": {
+            "css": [
+              "prismjs/themes/prism-tomorrow.css"
+            ]
+        },
+
+        "code": {
+            "copyButtons": true
+        },
+
+        "tbfed-pagefooter": {
+            "copyright":"",
+            "modify_label": "Last edited on:",
+            "modify_format": "YYYY-MM-DD HH:mm:ss"
+        },
+
+        "favicon": {
+            "shortcut": "asset/img/favicon.ico",
+            "bookmark": "asset/img/favicon.ico",
+            "appleTouch": "asset/img/favicon.ico",
+            "appleTouchMore": {
+                "120x120": "asset/img/favicon.ico",
+                "180x180": "asset/img/favicon.ico"
+            }
+        },
+        "edit-link": {
+            "base": "//github.com/eyespore/book/edit/master",
+            "label": "edit this page"
+        },
+	    "github": {
+            "url": "https://github.com/eyespore"
+        },
+	    "anchor-navigation-ex": {
+            "isShowTocTitleIcon": true
+        }
+    }
+}
